@@ -20,17 +20,16 @@ public class Aes {
         return random.generateSeed(32);
     }
 
-    public String encrypt(String data, byte[] rawAesKey) {
+    public String encrypt(String payload, byte[] rawAesKey) {
     	SecretKeySpec key = new SecretKeySpec(rawAesKey, "AES");
     	Cipher cipher = aesCipher();
 		try {
 			cipher.init(Cipher.ENCRYPT_MODE, key);
-			byte[] encryptedBytes = cipher.doFinal(data.getBytes());
+			byte[] encryptedBytes = cipher.doFinal(payload.getBytes());
 			byte[] iv = cipher.getIV();
 			ByteArrayBuffer buffer = new ByteArrayBuffer(encryptedBytes.length + iv.length);
 			buffer.append(iv, 0, iv.length);
 			buffer.append(encryptedBytes, 0, encryptedBytes.length);
-			System.out.println(encryptedBytes.length);
 			return Base64.encodeToString(buffer.toByteArray(), Base64.NO_WRAP);
 		} catch (InvalidKeyException e) {
 			e.printStackTrace();

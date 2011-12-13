@@ -4,8 +4,9 @@ import android.test.AndroidTestCase;
 import com.braintree.encryption.Aes;
 import java.util.Arrays;
 
+
 public class AesTest extends AndroidTestCase {
-	public void testGeneratesAesKey() {
+	public void testAesKeysAreUnique() {
 		Aes aes = new Aes();
 	    byte[] aesKey = aes.generateKey();
 	    assertEquals(32, aesKey.length);
@@ -15,9 +16,10 @@ public class AesTest extends AndroidTestCase {
 
 	public void testAesEncryption() {
 		Aes aes = new Aes();
-	    String encryptedString = aes.encrypt("test data", aes.generateKey());
-	    assertEquals(44, encryptedString.length());
-	    assertTrue(encryptedString.substring(43, 44).equals("="));
-	    assertFalse(encryptedString.substring(42, 43).equals("="));
+		byte[] aesKey = aes.generateKey();
+	    String encryptedData = aes.encrypt("test data", aesKey);
+	    assertEquals(44, encryptedData.length());
+	    assertTrue(encryptedData.substring(43, 44).equals("="));
+	    assertFalse(encryptedData.substring(42, 43).equals("="));
 	}
 }

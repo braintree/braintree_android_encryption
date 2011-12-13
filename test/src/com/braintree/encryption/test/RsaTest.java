@@ -1,7 +1,6 @@
 package com.braintree.encryption.test;
 
 import android.test.AndroidTestCase;
-import com.braintree.encryption.Aes;
 import com.braintree.encryption.Rsa;
 import android.util.Base64;
 import javax.crypto.BadPaddingException;
@@ -66,7 +65,7 @@ public class RsaTest extends AndroidTestCase {
 
 	public void testRSAEncryptionUsing2048BitPublicKey() {
 		Rsa rsa = new Rsa(publicKeyIn2048);
-		byte[] dataToEncrypt = new Aes().generateKey();
+		byte[] dataToEncrypt = new String("test data").getBytes();
 		String encryptedData = rsa.encrypt(dataToEncrypt);
 		byte[] decryptedData = decrypt(encryptedData, privateKeyIn2048);
 		assertTrue(Arrays.equals(dataToEncrypt, Base64.decode(decryptedData, Base64.NO_WRAP)));
@@ -86,7 +85,7 @@ public class RsaTest extends AndroidTestCase {
 				"etjB6uoLniNBQjw3Jb2iaurJAkBxNVTEYqcbh5G2q1KiUcxpc+l1Hl0i7R3R555OyBvlej1KyZj2H1oYPSH0gn/i7VgVYTHUYUiavW" +
 				"B1p+B9OR6BAkBJnthsIS16zqQRzbUtI6tuLIpMqthwTCpND+ZoIk0kWYOHwI7ousb28iMax6DYASLYA1SpKhjWskcPIF8WkfJE";
 		Rsa rsa = new Rsa(publicKeyIn1024);
-		byte[] dataToEncrypt = new Aes().generateKey();
+		byte[] dataToEncrypt = new String("test data").getBytes();
 		String encryptedData = rsa.encrypt(dataToEncrypt);
 		byte[] decryptedData = decrypt(encryptedData, privateKeyIn1024);
 		assertTrue(Arrays.equals(dataToEncrypt, Base64.decode(decryptedData, Base64.NO_WRAP)));
