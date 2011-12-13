@@ -12,7 +12,7 @@ import javax.crypto.spec.SecretKeySpec;
 
 import org.apache.http.util.ByteArrayBuffer;
 
-import android.util.Base64;
+import org.spongycastle.util.encoders.Base64;
 
 public class Aes {
     public byte[] generateKey() {
@@ -30,7 +30,7 @@ public class Aes {
 			ByteArrayBuffer buffer = new ByteArrayBuffer(encryptedBytes.length + iv.length);
 			buffer.append(iv, 0, iv.length);
 			buffer.append(encryptedBytes, 0, encryptedBytes.length);
-			return Base64.encodeToString(buffer.toByteArray(), Base64.NO_WRAP);
+			return new String(Base64.encode(buffer.toByteArray()));
 		} catch (InvalidKeyException e) {
 			e.printStackTrace();
 		} catch (BadPaddingException e) {

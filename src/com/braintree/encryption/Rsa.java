@@ -13,7 +13,7 @@ import javax.crypto.Cipher;
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
-import android.util.Base64;
+import org.spongycastle.util.encoders.Base64;
 
 public class Rsa {
 	private String publicKeyString;
@@ -28,9 +28,9 @@ public class Rsa {
 			rsa = Cipher.getInstance("RSA/ECB/PKCS1Padding");
 			PublicKey publicKey = publicKey();
 			rsa.init(Cipher.ENCRYPT_MODE, publicKey);
-			byte[] encodedData = Base64.encode(data, Base64.NO_WRAP);
+			byte[] encodedData = Base64.encode(data);
 			byte[] encryptedData = rsa.doFinal(encodedData);
-			return new String(Base64.encode(encryptedData, Base64.NO_WRAP));
+			return new String(Base64.encode(encryptedData));
 		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
 		} catch (NoSuchPaddingException e) {
@@ -47,7 +47,7 @@ public class Rsa {
 
 	private PublicKey publicKey() {
 		try {
-			byte[] decodedPublicKey = Base64.decode(publicKeyString, Base64.NO_WRAP);
+			byte[] decodedPublicKey = Base64.decode(publicKeyString);
 			ASN1InputStream in = new ASN1InputStream(decodedPublicKey);
 			DERObject obj = in.readObject();
 			RSAPublicKeyStructure keyStruct = RSAPublicKeyStructure.getInstance(obj);

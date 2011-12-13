@@ -2,7 +2,7 @@ package com.braintree.encryption.test;
 
 import android.test.AndroidTestCase;
 import com.braintree.encryption.Rsa;
-import android.util.Base64;
+import org.spongycastle.util.encoders.Base64;
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import static javax.crypto.Cipher.getInstance;
@@ -37,7 +37,7 @@ public class RsaTest extends AndroidTestCase {
         "3IjrxqAFFdmgBNsxc1JMoFUDMJe2KlaF3nEk3OWuPc/A5G12";
 
     private byte[] decrypt(String encryptedData, String privateKey) {
-        byte[] keyBytes = Base64.decode(privateKey, Base64.NO_WRAP);
+        byte[] keyBytes = Base64.decode(privateKey);
         KeyFactory keyFactory;
 		try {
 			keyFactory = KeyFactory.getInstance("RSA");
@@ -45,7 +45,7 @@ public class RsaTest extends AndroidTestCase {
 		    PrivateKey privKey = keyFactory.generatePrivate(encodedKeySpec);
 		    Cipher rsa = getInstance("RSA/ECB/PKCS1Padding");
 		    rsa.init(Cipher.DECRYPT_MODE, privKey);
-		    byte[] decodedEncrypted = Base64.decode(encryptedData, Base64.NO_WRAP);
+		    byte[] decodedEncrypted = Base64.decode(encryptedData);
 		    return rsa.doFinal(decodedEncrypted);
 		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
@@ -68,7 +68,7 @@ public class RsaTest extends AndroidTestCase {
 		byte[] dataToEncrypt = new String("test data").getBytes();
 		String encryptedData = rsa.encrypt(dataToEncrypt);
 		byte[] decryptedData = decrypt(encryptedData, privateKeyIn2048);
-		assertTrue(Arrays.equals(dataToEncrypt, Base64.decode(decryptedData, Base64.NO_WRAP)));
+		assertTrue(Arrays.equals(dataToEncrypt, Base64.decode(decryptedData)));
 	}
 	
 	public void testRSAEncryptionUsing1024BitPublicKey() {
@@ -88,6 +88,6 @@ public class RsaTest extends AndroidTestCase {
 		byte[] dataToEncrypt = new String("test data").getBytes();
 		String encryptedData = rsa.encrypt(dataToEncrypt);
 		byte[] decryptedData = decrypt(encryptedData, privateKeyIn1024);
-		assertTrue(Arrays.equals(dataToEncrypt, Base64.decode(decryptedData, Base64.NO_WRAP)));
+		assertTrue(Arrays.equals(dataToEncrypt, Base64.decode(decryptedData)));
 	}
 }
