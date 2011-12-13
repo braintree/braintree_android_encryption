@@ -1,13 +1,10 @@
 package com.braintree.encryption.test;
 
+import android.test.AndroidTestCase;
+import com.braintree.encryption.Aes;
 import java.util.Arrays;
 
-import android.test.AndroidTestCase;
-
-import com.braintree.encryption.Aes;
-
 public class AesTest extends AndroidTestCase {
-
 	public void testGeneratesAesKey() {
 		Aes aes = new Aes();
 	    byte[] aesKey = aes.generateKey();
@@ -23,5 +20,4 @@ public class AesTest extends AndroidTestCase {
 	    assertTrue(encryptedString.substring(43, 44).equals("="));
 	    assertFalse(encryptedString.substring(42, 43).equals("="));
 	}
-
 }

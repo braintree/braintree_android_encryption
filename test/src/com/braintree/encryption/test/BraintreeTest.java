@@ -1,7 +1,7 @@
 package com.braintree.encryption.test;
-import com.braintree.encryption.Braintree;
 
 import android.test.AndroidTestCase;
+import com.braintree.encryption.Braintree;
 
 public class BraintreeTest extends AndroidTestCase {
     private	String publicKey = "publicKey";
@@ -9,5 +9,4 @@ public class BraintreeTest extends AndroidTestCase {
     public void testHasAPublicEncryptionKey() {
         assertEquals(publicKey, new Braintree(publicKey).getPublicKey());
     }
-
 }

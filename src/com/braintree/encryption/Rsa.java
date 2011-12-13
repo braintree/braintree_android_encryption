@@ -1,29 +1,21 @@
 package com.braintree.encryption;
 
 import java.io.IOException;
-import org.spongycastle.jce.provider.BouncyCastleProvider;
 import org.spongycastle.asn1.*;
 import org.spongycastle.asn1.x509.RSAPublicKeyStructure;
-import java.security.InvalidKeyException;
 import java.security.KeyFactory;
-import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
-import java.security.Security;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.RSAPublicKeySpec;
-
-import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
+import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
-
 import android.util.Base64;
 
 public class Rsa {
-	static {
-		Security.addProvider(new BouncyCastleProvider());
-	}
-
 	private String publicKeyString;
 
 	public Rsa(String publicKeyString) {
