@@ -11,12 +11,12 @@ public class Braintree {
         return publicKey;
     }
 
-	public String encrypt(String payload) {
-		Aes aes = new Aes();
-	    Rsa rsa = new Rsa(publicKey);
-		byte[] aesKey = aes.generateKey();
-	    String encryptedPayload = aes.encrypt(payload, aesKey);
-		String encryptedAesKey = rsa.encrypt(aesKey);
-		return "$bt2$" + encryptedAesKey + "$" + encryptedPayload;
-	}
+    public String encrypt(String payload) {
+        Aes aes = new Aes();
+        Rsa rsa = new Rsa(publicKey);
+        byte[] aesKey = aes.generateKey();
+        String encryptedPayload = aes.encrypt(payload, aesKey);
+        String encryptedAesKey = rsa.encrypt(aesKey);
+        return "$bt2$" + encryptedAesKey + "$" + encryptedPayload;
+    }
 }
