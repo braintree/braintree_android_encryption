@@ -4,7 +4,7 @@ def do_cmd(cmd)
 end
 task :default do
   return_code = 0
-  do_cmd 'android update project --path . --subprojects'
+  do_cmd 'android update project --path . --subprojects --target 1'
   Dir.chdir("test") do
     do_cmd 'ant debug'
     do_cmd 'ant test'
