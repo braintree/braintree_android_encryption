@@ -3,3 +3,4 @@ gen
 res
 .settings
 lint.xml
+local.properties
