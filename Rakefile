@@ -6,9 +6,9 @@ task :default do
   return_code = 0
   do_cmd 'android update project --path . --subprojects --target 1'
   Dir.chdir("test") do
-    do_cmd 'ant debug'
-    do_cmd 'ant test'
+    do_cmd 'ant debug -v'
+    do_cmd 'ant test -v'
   end
-  do_cmd 'ant release'
+  do_cmd 'ant release -v'
 end
 
