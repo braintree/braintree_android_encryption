@@ -16,7 +16,9 @@ import org.spongycastle.util.encoders.Base64;
 public class Aes {
     public byte[] generateKey() {
         SecureRandom random = new SecureRandom();
-        return random.generateSeed(32);
+        byte[] keyBytes = new byte[32];
+        random.nextBytes(keyBytes);
+        return keyBytes;
     }
 
     public String encrypt(String payload, byte[] rawAesKey) {
