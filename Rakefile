@@ -5,7 +5,7 @@ end
 task :default do
   return_code = 0
   Dir.chdir("test") do
-    do_cmd 'ant debug installt test -v'
+    do_cmd 'ant debug install test -v'
   end
   do_cmd 'ant release -v'
 end
