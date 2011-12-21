@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.braintree.encryption.test"
+    package="com.braintree.encryption"
     android:versionCode="1"
     android:versionName="1.0" >
 
@@ -8,7 +8,7 @@
 
     <instrumentation
         android:name="android.test.InstrumentationTestRunner"
-        android:targetPackage="com.braintree.encryption.test" />
+        android:targetPackage="com.braintree.encryption" />
 
     <application>
         <uses-library android:name="android.test.runner" />
