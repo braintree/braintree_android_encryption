@@ -4,9 +4,10 @@ def do_cmd(cmd)
 end
 task :default do
   return_code = 0
+  do_cmd 'ant debug'
   Dir.chdir("test") do
-    do_cmd 'ant debug install test -v'
+    do_cmd 'ant debug test'
   end
-  do_cmd 'ant release -v'
+  do_cmd 'ant release'
 end
 
