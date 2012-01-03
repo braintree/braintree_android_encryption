@@ -1,4 +1,4 @@
-package com.braintree.encryption;
+package com.braintreegateway.encryption;
 
 public class Braintree {
     private String publicKey;

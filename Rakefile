@@ -6,7 +6,8 @@ task :default do
   return_code = 0
   do_cmd 'ant debug'
   Dir.chdir("test") do
-    do_cmd 'ant debug test'
+    do_cmd 'ant debug install' rescue
+    do_cmd 'ant test'
   end
   do_cmd 'ant release'
 end

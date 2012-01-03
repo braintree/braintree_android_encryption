@@ -1,4 +1,4 @@
-package com.braintree.encryption;
+package com.braintreegateway.encryption;
 
 import java.io.IOException;
 import java.security.InvalidKeyException;

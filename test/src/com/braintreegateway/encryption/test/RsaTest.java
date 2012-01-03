@@ -1,4 +1,4 @@
-package com.braintree.encryption.test;
+package com.braintreegateway.encryption.test;
 
 import static javax.crypto.Cipher.getInstance;
 
