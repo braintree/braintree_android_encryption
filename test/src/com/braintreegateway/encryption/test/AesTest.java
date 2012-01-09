@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 import android.test.AndroidTestCase;
 
-import com.braintree.encryption.Aes;
+import com.braintreegateway.encryption.Aes;
 
 public class AesTest extends AndroidTestCase {
     public void testAesKeysAreUnique() {

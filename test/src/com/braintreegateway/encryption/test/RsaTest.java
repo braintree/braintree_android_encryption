@@ -19,7 +19,7 @@ import org.spongycastle.util.encoders.Base64;
 
 import android.test.AndroidTestCase;
 
-import com.braintree.encryption.Rsa;
+import com.braintreegateway.encryption.Rsa;
 
 public class RsaTest extends AndroidTestCase {
     private String publicKeyIn2048 = "MIIBCgKCAQEA8wQ3PXFYuBn9RBtOK3lW4V+7HNjik7FFd0qpPsCVd4KeiIfhuzupSevHUOLjbRSqwvAaZK3/i" +

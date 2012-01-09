@@ -2,7 +2,7 @@ package com.braintreegateway.encryption.test;
 
 import android.test.AndroidTestCase;
 
-import com.braintree.encryption.Braintree;
+import com.braintreegateway.encryption.Braintree;
 
 public class BraintreeTest extends AndroidTestCase {
     private String publicKey = "MIIBCgKCAQEA8wQ3PXFYuBn9RBtOK3lW4V+7HNjik7FFd0qpPsCVd4KeiIfhuzupSevHUOLjbRSqwvAaZK3/icbBaM7" +
