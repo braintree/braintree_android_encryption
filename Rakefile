@@ -5,8 +5,6 @@ end
 
 task :default do
   return_code = 0
-  do_cmd 'android update lib-project --path . --target 1'
-  do_cmd 'android update project --path test --target 1'
   Dir.chdir("test") do
     do_cmd 'ant clean debug install test'
   end
