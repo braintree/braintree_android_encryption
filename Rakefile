@@ -3,14 +3,11 @@ def do_cmd(cmd)
     raise "'#{cmd}' failed" unless return_code
 end
 
-task :default => :clean do
+task :default do
   return_code = 0
-  do_cmd 'ant debug'
   Dir.chdir("test") do
-    do_cmd 'ant debug install' rescue
-    do_cmd 'ant test'
+    do_cmd 'ant clean debug install test'
   end
-  do_cmd 'ant release'
 end
 
 task :clean do
