@@ -50,6 +50,6 @@ public class BraintreeTest extends AndroidTestCase {
 
         byte[] aesKey = RsaDecrypter.decrypt(encryptedAesKey, privateKey);
         byte[] decryptedData = AesDecrypter.decrypt(encryptedIvAndCipherText, aesKey);
-        assertFalse(Arrays.equals(dataToEncrypt.getBytes(), decryptedData));
+        assertTrue(Arrays.equals(dataToEncrypt.getBytes(), decryptedData));
     }
 }
