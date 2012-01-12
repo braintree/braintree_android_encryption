@@ -18,13 +18,19 @@ public class AesDecrypter {
     private static int IV_LENGTH = 16;
 
     public static byte[] decrypt(String data, byte[] aesKey) {
+        byte[] decodedData = Base64.decode(data);
+        byte[] derivedIV = getIV(decodedData);
+        return decrypt(data, aesKey, derivedIV);
+    }
+
+    public static byte[] decrypt(String data, byte[] aesKey, byte[] suppliedIV) {
         byte[] keyBytes = Base64.decode(aesKey);
         SecretKeySpec key = new SecretKeySpec(keyBytes, "AES");
         Cipher cipher = aesCipher();
         try {
             byte[] decodedData = Base64.decode(data);
             byte[] encryptedData = getEncryptedData(decodedData);
-            IvParameterSpec ivParamSpec = new IvParameterSpec(getIV(decodedData));
+            IvParameterSpec ivParamSpec = new IvParameterSpec(suppliedIV);
             cipher.init(Cipher.DECRYPT_MODE, key, ivParamSpec);
             return cipher.doFinal(encryptedData);
         } catch (InvalidKeyException e) {

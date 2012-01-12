@@ -19,6 +19,8 @@ import org.spongycastle.asn1.x509.RSAPublicKeyStructure;
 import org.spongycastle.util.encoders.Base64;
 
 public class Rsa {
+    private final String ALGORITHM = "RSA";
+    private final String TRANSFORMATION = "RSA/ECB/PKCS1Padding";
     private String publicKeyString;
 
     public Rsa(String publicKeyString) {
@@ -28,7 +30,7 @@ public class Rsa {
     public String encrypt(byte[] data) {
         Cipher rsa;
         try {
-            rsa = Cipher.getInstance("RSA/ECB/PKCS1Padding");
+            rsa = Cipher.getInstance(TRANSFORMATION);
             PublicKey publicKey = publicKey();
             rsa.init(Cipher.ENCRYPT_MODE, publicKey);
             byte[] encodedData = Base64.encode(data);
@@ -55,7 +57,7 @@ public class Rsa {
             DERObject obj = in.readObject();
             RSAPublicKeyStructure keyStruct = RSAPublicKeyStructure.getInstance(obj);
             RSAPublicKeySpec keySpec = new RSAPublicKeySpec(keyStruct.getModulus(), keyStruct.getPublicExponent());
-            KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+            KeyFactory keyFactory = KeyFactory.getInstance(ALGORITHM);
             return keyFactory.generatePublic(keySpec);
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
