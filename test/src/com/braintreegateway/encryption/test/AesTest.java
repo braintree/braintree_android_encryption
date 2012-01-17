@@ -12,6 +12,7 @@ import com.braintreegateway.encryption.util.AesDecrypter;
 public class AesTest extends AndroidTestCase {
     private Aes aes;
 
+    @Override
     public void setUp() {
         aes = new Aes();
     }
