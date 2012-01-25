@@ -2,7 +2,7 @@ package com.braintreegateway.encryption.test;
 
 import java.util.Arrays;
 
-import org.spongycastle.util.encoders.Base64;
+import org.bouncycastle.crypto.util.encoders.Base64;
 
 import android.test.AndroidTestCase;
 

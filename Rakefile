@@ -5,6 +5,7 @@ end
 
 task :default => [:check_version, :test]
 
+desc "run unit tests"
 task :test do
   return_code = 0
   Dir.chdir("test") do
@@ -25,6 +26,7 @@ task :update_version do
   update_versions
 end
 
+desc "ant clean"
 task :clean do
   return_code = 0
   do_cmd 'ant clean'
