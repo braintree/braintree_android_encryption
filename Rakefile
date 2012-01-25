@@ -1,3 +1,5 @@
+require 'fileutils'
+
 def do_cmd(cmd)
     return_code = Kernel.system cmd
     raise "'#{cmd}' failed" unless return_code
@@ -11,6 +13,11 @@ task :test do
   Dir.chdir("test") do
     do_cmd 'ant clean debug install test'
   end
+end
+
+task :release do
+  do_cmd 'ant clean release'
+  FileUtils.cp 'bin/classes.jar', 'braintree-android-encryption.jar'
 end
 
 desc "check if versions match for Braintree.java and AndroidManifest.xml"

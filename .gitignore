@@ -3,3 +3,4 @@ gen
 .settings
 lint.xml
 local.properties
+braintree-android-encryption.jar
