@@ -13,10 +13,10 @@ import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
-import org.bouncycastle.crypto.asn1.ASN1InputStream;
-import org.bouncycastle.crypto.asn1.DERObject;
-import org.bouncycastle.crypto.asn1.x509.RSAPublicKeyStructure;
-import org.bouncycastle.crypto.util.encoders.Base64;
+import com.braintree.org.bouncycastle.asn1.ASN1InputStream;
+import com.braintree.org.bouncycastle.asn1.DERObject;
+import com.braintree.org.bouncycastle.asn1.x509.RSAPublicKeyStructure;
+import com.braintree.org.bouncycastle.util.encoders.Base64;
 
 public class Rsa {
     private final String ALGORITHM = "RSA";

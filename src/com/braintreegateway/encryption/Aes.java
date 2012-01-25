@@ -13,7 +13,7 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
 import org.apache.http.util.ByteArrayBuffer;
-import org.bouncycastle.crypto.util.encoders.Base64;
+import com.braintree.org.bouncycastle.util.encoders.Base64;
 
 public class Aes {
     private final String ALGORITHM = "AES";

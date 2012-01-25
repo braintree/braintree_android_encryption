@@ -14,7 +14,7 @@ import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
-import org.bouncycastle.crypto.util.encoders.Base64;
+import com.braintree.org.bouncycastle.util.encoders.Base64;
 
 public class RsaDecrypter {
     public static byte[] decrypt(String encryptedData, String privateKey) {
