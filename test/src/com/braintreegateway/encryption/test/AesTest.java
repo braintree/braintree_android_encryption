@@ -1,58 +1,46 @@
 package com.braintreegateway.encryption.test;
 
 import java.util.Arrays;
-
-import com.braintree.org.bouncycastle.util.encoders.Base64;
-
+import java.security.InvalidAlgorithmParameterException;
+import java.security.NoSuchAlgorithmException;
+import java.security.InvalidKeyException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.BadPaddingException;
+import javax.crypto.NoSuchPaddingException;
 import android.test.AndroidTestCase;
-
+import com.braintree.org.bouncycastle.util.encoders.Base64;
 import com.braintreegateway.encryption.Aes;
+import com.braintreegateway.encryption.Random;
+import com.braintreegateway.encryption.BraintreeEncryptionException;
 import com.braintreegateway.encryption.util.AesDecrypter;
 
 public class AesTest extends AndroidTestCase {
-    private Aes aes;
+    private byte[] aesKey;
+    private byte[] aesIV;
+    private final String dataToEncrypt = "test data";
 
     @Override
     public void setUp() {
-        aes = new Aes();
+        aesKey = Random.secureRandomBytes(Aes.KEY_LENGTH);
+        aesIV = Random.secureRandomBytes(Aes.IV_LENGTH);
     }
 
-    public void testAesKeysAreUnique() {
-        byte[] aesKey = aes.generateKey();
-        assertEquals(32, aesKey.length);
-        byte[] aesKey2 = aes.generateKey();
-        assertFalse(Arrays.equals(aesKey, aesKey2));
-    }
-
-    public void testIVsAreUnique() {
-        byte[] iv = aes.generateIV();
-        assertEquals(16, iv.length);
-        byte[] iv2 = aes.generateIV();
-        assertFalse(Arrays.equals(iv, iv2));
-    }
-
-    public void testAesEncryptionSize() {
-        byte[] aesKey = aes.generateKey();
-        String encryptedData = aes.encrypt("test data", aesKey);
+    public void testAesEncryptionSize() throws BraintreeEncryptionException {
+        String encryptedData = Aes.encrypt(dataToEncrypt, aesKey, aesIV);
         assertEquals(44, encryptedData.length());
         assertTrue(encryptedData.substring(43, 44).equals("="));
         assertFalse(encryptedData.substring(42, 43).equals("="));
     }
 
-    public void testAesEncryptionWithSuppliedAesKeyAndIV() {
-        String dataToEncrypt = "test data";
-        byte[] aesKey = aes.generateKey();
-        byte[] iv = aes.generateIV();
-        String encryptedData = aes.encrypt(dataToEncrypt, aesKey, iv);
-        byte[] decryptedData = AesDecrypter.decrypt(encryptedData, Base64.encode(aesKey), iv);
-        assertTrue(Arrays.equals(dataToEncrypt.getBytes(), decryptedData));
-    }
-
-    public void testAesEncryptionWithSuppliedAesKey() {
-        String dataToEncrypt = "test data";
-        byte[] aesKey = aes.generateKey();
-        String encryptedData = aes.encrypt(dataToEncrypt, aesKey);
-        byte[] decryptedData = AesDecrypter.decrypt(encryptedData, Base64.encode(aesKey));
+    public void testAesEncryption() throws BraintreeEncryptionException,
+                                           InvalidKeyException,
+                                           IllegalBlockSizeException,
+                                           BadPaddingException,
+                                           InvalidAlgorithmParameterException,
+                                           NoSuchAlgorithmException,
+                                           NoSuchPaddingException {
+        String encryptedData = Aes.encrypt(dataToEncrypt, aesKey, aesIV);
+        byte[] decryptedData = AesDecrypter.decrypt(encryptedData, Base64.encode(aesKey), aesIV);
         assertTrue(Arrays.equals(dataToEncrypt.getBytes(), decryptedData));
     }
 }

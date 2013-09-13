@@ -3,7 +3,6 @@ package com.braintreegateway.encryption;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -15,26 +14,13 @@ import javax.crypto.spec.SecretKeySpec;
 import org.apache.http.util.ByteArrayBuffer;
 import com.braintree.org.bouncycastle.util.encoders.Base64;
 
-public class Aes {
-    private final String ALGORITHM = "AES";
-    private final String TRANSFORMATION = "AES/CBC/PKCS5Padding";
-    private final int KEY_LENGTH = 32;
-    private final int IV_LENGTH = 16;
+public final class Aes {
+    private static final String ALGORITHM = "AES";
+    private static final String TRANSFORMATION = "AES/CBC/PKCS5Padding";
+    public static final int KEY_LENGTH = 32;
+    public static final int IV_LENGTH = 16;
 
-    public byte[] generateKey() {
-        return secureRandomBytes(KEY_LENGTH);
-    }
-
-    public byte[] generateIV() {
-        return secureRandomBytes(IV_LENGTH);
-    }
-
-    public String encrypt(String data, byte[] aesKey) {
-        byte[] generatedIV = generateIV();
-        return encrypt(data, aesKey, generatedIV);
-    }
-
-    public String encrypt(String data, byte[] aesKey, byte[] iv) {
+    public static String encrypt(String data, byte[] aesKey, byte[] iv) throws BraintreeEncryptionException {
         SecretKeySpec key = new SecretKeySpec(aesKey, ALGORITHM);
         Cipher cipher = aesCipher();
         try {
@@ -46,33 +32,23 @@ public class Aes {
             buffer.append(encryptedBytes, 0, encryptedBytes.length);
             return new String(Base64.encode(buffer.toByteArray()));
         } catch (InvalidKeyException e) {
-            e.printStackTrace();
+            throw new BraintreeEncryptionException("Invalid Key: " + e.getMessage());
         } catch (BadPaddingException e) {
-            e.printStackTrace();
+            throw new BraintreeEncryptionException("Bad Padding: " + e.getMessage());
         } catch (IllegalBlockSizeException e) {
-            e.printStackTrace();
+            throw new BraintreeEncryptionException("Illegal Block Size: " + e.getMessage());
         } catch (InvalidAlgorithmParameterException e) {
-            e.printStackTrace();
+            throw new BraintreeEncryptionException("Invalid Algorithm: " + e.getMessage());
         }
-        return null;
     }
 
-    private Cipher aesCipher() {
+    private static Cipher aesCipher() throws BraintreeEncryptionException {
         try {
             return Cipher.getInstance(TRANSFORMATION);
         } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-            return null;
+            throw new BraintreeEncryptionException("No Such Algorithm: " + e.getMessage());
         } catch (NoSuchPaddingException e) {
-            e.printStackTrace();
-            return null;
+            throw new BraintreeEncryptionException("No Such Padding: " + e.getMessage());
         }
-    }
-
-    private byte[] secureRandomBytes(int size) {
-        SecureRandom random = new SecureRandom();
-        byte[] keyBytes = new byte[size];
-        random.nextBytes(keyBytes);
-        return keyBytes;
     }
 }

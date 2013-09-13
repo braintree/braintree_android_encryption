@@ -16,12 +16,11 @@ public class Braintree {
         return VERSION;
     }
 
-    public String encrypt(String payload) {
-        Aes aes = new Aes();
-        Rsa rsa = new Rsa(publicKey);
-        byte[] aesKey = aes.generateKey();
-        String encryptedPayload = aes.encrypt(payload, aesKey);
-        String encryptedAesKey = rsa.encrypt(aesKey);
+    public String encrypt(String payload) throws BraintreeEncryptionException {
+        byte[] aesKey = Random.secureRandomBytes(Aes.KEY_LENGTH);
+        byte[] aesIV = Random.secureRandomBytes(Aes.IV_LENGTH);
+        String encryptedPayload = Aes.encrypt(payload, aesKey, aesIV);
+        String encryptedAesKey = Rsa.encrypt(aesKey, publicKey);
         return getPrefix() + encryptedAesKey + "$" + encryptedPayload;
     }
 

@@ -18,54 +18,54 @@ import com.braintree.org.bouncycastle.asn1.DERObject;
 import com.braintree.org.bouncycastle.asn1.x509.RSAPublicKeyStructure;
 import com.braintree.org.bouncycastle.util.encoders.Base64;
 
-public class Rsa {
-    private final String ALGORITHM = "RSA";
-    private final String TRANSFORMATION = "RSA/ECB/PKCS1Padding";
-    private String publicKeyString;
+public final class Rsa {
+    private static final String ALGORITHM = "RSA";
+    private static final String TRANSFORMATION = "RSA/ECB/PKCS1Padding";
 
-    public Rsa(String publicKeyString) {
-        this.publicKeyString = publicKeyString;
-    }
-
-    public String encrypt(byte[] data) {
+    public static String encrypt(byte[] data, String publicKeyString) throws BraintreeEncryptionException {
         Cipher rsa;
         try {
             rsa = Cipher.getInstance(TRANSFORMATION);
-            PublicKey publicKey = publicKey();
+            PublicKey publicKey = publicKey(publicKeyString);
             rsa.init(Cipher.ENCRYPT_MODE, publicKey);
             byte[] encodedData = Base64.encode(data);
             byte[] encryptedData = rsa.doFinal(encodedData);
             return new String(Base64.encode(encryptedData));
         } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
+            throw new BraintreeEncryptionException("No Such Algorithm: " + e.getMessage());
         } catch (NoSuchPaddingException e) {
-            e.printStackTrace();
+            throw new BraintreeEncryptionException("No Such Padding: " + e.getMessage());
         } catch (InvalidKeyException e) {
-            e.printStackTrace();
+            throw new BraintreeEncryptionException("Invalid Key: " + e.getMessage());
         } catch (IllegalBlockSizeException e) {
-            e.printStackTrace();
+            throw new BraintreeEncryptionException("Illegal Block Size: " + e.getMessage());
         } catch (BadPaddingException e) {
-            e.printStackTrace();
+            throw new BraintreeEncryptionException("Bad Padding: " + e.getMessage());
         }
-        return null;
     }
 
-    private PublicKey publicKey() {
+    private static PublicKey publicKey(String publicKeyString) throws BraintreeEncryptionException {
+        ASN1InputStream in = null;
         try {
             byte[] decodedPublicKey = Base64.decode(publicKeyString);
-            ASN1InputStream in = new ASN1InputStream(decodedPublicKey);
+            in = new ASN1InputStream(decodedPublicKey);
             DERObject obj = in.readObject();
             RSAPublicKeyStructure keyStruct = RSAPublicKeyStructure.getInstance(obj);
             RSAPublicKeySpec keySpec = new RSAPublicKeySpec(keyStruct.getModulus(), keyStruct.getPublicExponent());
             KeyFactory keyFactory = KeyFactory.getInstance(ALGORITHM);
             return keyFactory.generatePublic(keySpec);
         } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
+            throw new BraintreeEncryptionException("No Such Algorithm: " + e.getMessage());
         } catch (InvalidKeySpecException e) {
-            e.printStackTrace();
+            throw new BraintreeEncryptionException("Invalid Key Spec: " + e.getMessage());
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new BraintreeEncryptionException("IO Exception: " + e.getMessage());
+        } finally {
+            try {
+                in.close();
+            } catch (IOException e) {
+                throw new BraintreeEncryptionException("IO Exception: " + e.getMessage());
+            }
         }
-        return null;
     }
 }
