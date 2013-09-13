@@ -6,6 +6,6 @@ public class BraintreeEncryptionException extends Exception {
     }
 
     public BraintreeEncryptionException(String message, Throwable cause) {
-	super(message, cause);
+        super(message, cause);
     }
 }
