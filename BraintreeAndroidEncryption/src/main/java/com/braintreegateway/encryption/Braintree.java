@@ -1,7 +1,7 @@
 package com.braintreegateway.encryption;
 
 public class Braintree {
-    private final String VERSION = "1.0.0";
+    private final String VERSION = Integer.toString(BuildConfig.VERSION_CODE);
     private final String publicKey;
 
     public Braintree(String publicKey) {
