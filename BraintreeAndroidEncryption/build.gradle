@@ -52,7 +52,7 @@ uploadArchives {
 
             pom.project {
                 name 'encryption'
-                groupId = 'com.braintreegateway'
+                groupId = 'com.braintreepayments'
                 version = "${android.defaultConfig.versionName}"
                 packaging 'jar'
                 description 'Client side encryption for Braintree integrations on Android.'
