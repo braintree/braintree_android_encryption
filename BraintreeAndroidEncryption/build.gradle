@@ -1,0 +1,84 @@
+apply plugin: 'com.android.library'
+apply plugin: 'maven'
+apply plugin: 'signing'
+
+android {
+    compileSdkVersion 20
+    buildToolsVersion "20.0.0"
+
+    defaultConfig {
+        applicationId "com.braintreegateway.encryption"
+        minSdkVersion 7
+        targetSdkVersion 20
+        versionCode 1
+        versionName "1.0.0"
+    }
+
+    buildTypes {
+        release {
+            runProguard true
+            proguardFiles 'proguard-rules.cfg'
+        }
+    }
+}
+
+/* maven deploy + signing */
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from android.sourceSets.main.java.srcDirs
+}
+
+artifacts {
+    archives sourcesJar
+}
+
+signing {
+    sign configurations.archives
+}
+
+def sonatypeUsername = System.properties['sonatypeUsername'] ?: ''
+def sonatypePassword = System.properties['sonatypePassword'] ?: ''
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+            repository(url: 'https://oss.sonatype.org/service/local/staging/deploy/maven2/') {
+                authentication(userName: sonatypeUsername, password: sonatypePassword)
+            }
+
+            pom.setArtifactId 'encryption'
+
+            pom.project {
+                name 'encryption'
+                groupId = 'com.braintreepayments'
+                version = "${android.defaultConfig.versionName}"
+                packaging 'jar'
+                description 'Client side encryption for Braintree integrations on Android.'
+                url 'https://github.com/braintree/braintree_android_encryption'
+
+                scm {
+                    url 'scm:git@github.com:braintree/braintree_android_encryption.git'
+                    connection 'scm:git@github.com:braintree/braintree_android_encryption.git'
+                    developerConnection 'scm:git@github.com:braintree/braintree_android_encryption.git'
+                }
+
+                developers {
+                    developer {
+                        id 'devs'
+                        name 'Braintree Payments'
+                    }
+                }
+
+                licenses {
+                    license {
+                        name 'MIT'
+                        url 'http://opensource.org/licenses/MIT'
+                        distribution 'repo'
+                    }
+                }
+            }
+        }
+    }
+}
