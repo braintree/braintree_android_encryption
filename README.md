@@ -1,25 +1,44 @@
 # Braintree Android Encryption
 
-This library is for use with [Braintree's payment gateway](http://braintreepayments.com/) in concert with one of [the supported client libraries](http://braintreepayments.com/docs).  It encrypts sensitive payment information using the public key of an asymmetric key pair.
+This library is for use with [Braintree's payment gateway](http://braintreepayments.com/) in concert
+with one of [the supported client libraries](http://braintreepayments.com/docs).  It encrypts
+sensitive payment information using the public key of an asymmetric key pair.
 
-## Getting Started
+## Install
 
-There are a couple of ways to use the Android client encryption library.
+### Gradle
+
+In your `build.gradle`, add the following:
+
+```groovy
+dependencies {
+  ...
+  compile 'com.braintreepayments:encryption:2.+'
+}
+```
+
+### Maven
+
+In your `pom.xml` add the following:
+
+```xml
+<dependencies>
+  ...
+    <dependency>
+      <groupId>com.braintreepayments</groupId>
+      <artifactId>encryption</artifactId>
+      <version>[2.0,)</version>
+      <type>jar</type>
+    </dependency>
+  </dependencies>
+```
 
 ### Jar File
 
-1. Simply download the jar file from this repo and add it to your Android project.
+Download the [jar file](https://repository.sonatype.org/service/local/artifact/maven/redirect?r=central-proxy&g=com.braintreepayments&a=encryption&v=LATEST)
+and include it in your project.
 
-### Android Library Project (SDK r6 or higher)
-
-_Note: This assumes you are using Eclipse as your development IDE._
-
-1. Clone this repo.
-2. Import the Braintree Android library project into your Eclipse workspace.
-3. Go to your project's properties.
-4. Under Android, Library section, add the Braintree Android library project.
-
-Here's a quick example.
+## Usage
 
 Configure the library to use your public key.
 
@@ -33,15 +52,20 @@ And call the `encrypt` method passing in the data you wish to be encrypted.
 String encryptedValue = braintree.encrypt("sensitiveValue");
 ```
 
-Because we are using asymmetric encryption, you will be unable to decrypt the data you have encrypted using your public encryption key. Only the Braintree Gateway will be able to decrypt these encrypted values.  This means that `encryptedValue` is now safe to pass through your servers to be used in the Server-to-Server API of one of our client libraries.
+Because we are using asymmetric encryption, you will be unable to decrypt the data you have
+encrypted using your public encryption key. Only the Braintree Gateway will be able to decrypt
+these encrypted values.  This means that `encryptedValue` is now safe to pass through your servers
+to be used in the Server-to-Server API of one of our client libraries.
 
 ## Retrieving your Encryption Key
 
-When Client-Side encryption is enabled for your Braintree Gateway account, a key pair is generated and you are given a specially formatted version of the public key.
+When Client-Side encryption is enabled for your Braintree Gateway account, a key pair is generated
+and you are given a specially formatted version of the public key.
 
 ## Encrypting Form Values
 
-The normal use case for this library is to encrypt a credit card number and CVV code before a form is submitted to your servers.  A simple example of this in Android might look something like this:
+The normal use case for this library is to encrypt a credit card number and CVV code before a form
+is submitted to your servers.  A simple example of this in Android might look something like this:
 
 ```java
 public class BraintreeActivity extends Activity {
@@ -66,7 +90,16 @@ public class BraintreeActivity extends Activity {
     private String encryptFormField(View formField) {
         String formFieldText = getFieldText((EditText) formField);
         Braintree braintree = new Braintree(publicKey);
-        return braintree.encrypt(formFieldText);
+        try {
+            return braintree.encrypt(formFieldText);
+        } catch(BraintreeEncryptionException e) {
+            throw new RuntimeException("Encryption failed!");
+        }
     }
 }
 ```
+
+## License
+
+braintree_android_encryption is open source and available under the MIT license. See the
+[LICENSE](LICENSE) file for more info.

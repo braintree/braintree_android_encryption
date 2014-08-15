@@ -1,75 +1,69 @@
 require 'fileutils'
 
-def do_cmd(cmd)
-    return_code = Kernel.system cmd
-    raise "'#{cmd}' failed" unless return_code
-end
-
-task :default => [:check_version, :test]
+task :default => [:test]
 
 desc "run unit tests"
 task :test do
-  return_code = 0
-  Dir.chdir("test") do
-    do_cmd 'ant clean debug install test'
+  output = `adb devices`
+  if output.match(/device$/)
+    sh "./gradlew --info clean connectedAndroidTest"
+  else
+    puts "Please connect a device or start an emulator and try again"
+    exit 1
   end
 end
 
-task :release do
-  do_cmd 'ant clean release'
-  FileUtils.cp 'bin/classes.jar', 'braintree-android-encryption.jar'
+task :release => :test do
+  last_version = `git tag | tail -1`.chomp
+  puts "Changes since #{last_version}:"
+  sh "git log --pretty=format:\"%h %ad%x20%s%x20%x28%an%x29\" --date=short #{last_version}.."
+  puts
+  puts "Please update your CHANGELOG.md. Press ENTER when you are done"
+  $stdin.gets
+
+  puts "What version are you releasing? (x.x.x format)"
+  version = $stdin.gets.chomp
+
+  increment_version_code
+  update_version(version)
+
+  sh "./gradlew clean uploadArchives"
+  puts "BraintreeAndroidEncryption #{version} was uploaded, please promote it on oss.sonatype.org. Press ENTER when you have promoted it"
+  $stdin.gets
+
+  sh "git commit -am 'Release #{version}'"
+  sh "git tag #{version} -am '#{version}'"
+
+  puts "Commits and tags have been created. If everything appears to be in order, hit ENTER to push."
+  $stdin.gets
+
+  sh "git push origin master"
+  sh "git push --tags"
+
+  puts "Tagging complete! Commits and tags are now in GHE."
+  puts "Squash (or don't!) and push to public Github at your leisure."
 end
 
-desc "check if versions match for Braintree.java and AndroidManifest.xml"
-task :check_version do
-  if version != manifest_version
-    raise "Braintree.java version does not match AndroidManifest.xml version"
+def build_gradle_file
+  'BraintreeAndroidEncryption/build.gradle'
+end
+
+def increment_version_code
+  new_build_file = ""
+  File.foreach(build_gradle_file) do |line|
+    if line.match(/versionCode (\d+)/)
+      new_build_file += line.gsub(/versionCode \d+/, "versionCode #{$1.to_i + 1}")
+    else
+      new_build_file += line
+    end
   end
+  IO.write(build_gradle_file, new_build_file)
 end
 
-desc "update versions on both Braintree.java and AndroidManifest.xml"
-task :update_version do
-  raise "ENV['ANDROID_VERSION'] is not defined" if ENV["ANDROID_VERSION"].nil?
-  update_versions
-end
-
-desc "ant clean"
-task :clean do
-  return_code = 0
-  do_cmd 'ant clean'
-  Dir.chdir("test") do
-    do_cmd 'ant clean'
-  end
-end
-
-def braintree_java_file
-  'src/com/braintreegateway/encryption/Braintree.java'
-end
-
-def android_manifest
-  'AndroidManifest.xml'
-end
-
-def update_versions
-  contents = File.read(braintree_java_file)
-  contents.gsub!(/VERSION = ".*"/, "VERSION = \"#{ENV["ANDROID_VERSION"]}\"")
-  File.open(braintree_java_file, 'w') { |f| f.write(contents); f.close }
-
-  manifest_contents = File.read(android_manifest)
-  manifest_contents.gsub!(/android:versionName=".*"/, "android:versionName=\"#{ENV["ANDROID_VERSION"]}\"")
-  File.open(android_manifest, 'w') { |f| f.write(manifest_contents); f.close }
-end
-
-def version
-  contents = File.read(braintree_java_file)
-  version = contents.slice(/VERSION = "(.*)"/, 1)
-  raise "Cannot read version" if version.empty?
-  version
-end
-
-def manifest_version
-  contents = File.read(android_manifest)
-  version = contents.slice(/android:versionName="(.*)"/, 1)
-  raise "Cannot read version" if version.empty?
-  version
+def update_version(version)
+  IO.write(build_gradle_file,
+    File.open(build_gradle_file) do |file|
+      file.read.gsub(/versionName '\d+\.\d+\.\d+'/, "versionName '#{version}'")
+    end
+  )
 end

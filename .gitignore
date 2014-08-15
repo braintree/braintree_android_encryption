@@ -1,6 +1,7 @@
-bin
-gen
-.settings
-lint.xml
+.gradle
+.idea
+build
 local.properties
-braintree-android-encryption.jar
+gradle.properties
+.DS_Store
+*.iml
