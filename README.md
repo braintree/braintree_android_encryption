@@ -90,7 +90,11 @@ public class BraintreeActivity extends Activity {
     private String encryptFormField(View formField) {
         String formFieldText = getFieldText((EditText) formField);
         Braintree braintree = new Braintree(publicKey);
-        return braintree.encrypt(formFieldText);
+        try {
+            return braintree.encrypt(formFieldText);
+        } catch(BraintreeEncryptionException e) {
+            throw new RuntimeException("Encryption failed!");
+        }
     }
 }
 ```

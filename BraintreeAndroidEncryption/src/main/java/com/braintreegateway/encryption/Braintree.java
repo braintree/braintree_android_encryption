@@ -1,7 +1,6 @@
 package com.braintreegateway.encryption;
 
 public class Braintree {
-    private final String VERSION = Integer.toString(BuildConfig.VERSION_CODE);
     private final String publicKey;
 
     public Braintree(String publicKey) {
@@ -10,10 +9,6 @@ public class Braintree {
 
     public String getPublicKey() {
         return publicKey;
-    }
-
-    public String getVersion() {
-        return VERSION;
     }
 
     public String encrypt(String payload) throws BraintreeEncryptionException {
@@ -25,6 +20,6 @@ public class Braintree {
     }
 
     private String getPrefix() {
-        return "$bt3|android_" + VERSION.replace(".", "_") + "$";
+        return "$bt3|android_" + BuildConfig.VERSION_NAME.replace(".", "_") + "$";
     }
 }

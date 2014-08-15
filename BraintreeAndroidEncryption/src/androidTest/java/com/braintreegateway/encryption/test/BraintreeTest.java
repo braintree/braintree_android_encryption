@@ -1,19 +1,22 @@
 package com.braintreegateway.encryption.test;
 
-import java.util.Arrays;
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
-import java.security.spec.InvalidKeySpecException;
-import javax.crypto.NoSuchPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.BadPaddingException;
 import android.test.AndroidTestCase;
+
 import com.braintreegateway.encryption.Braintree;
 import com.braintreegateway.encryption.BraintreeEncryptionException;
 import com.braintreegateway.encryption.util.AesDecrypter;
 import com.braintreegateway.encryption.util.RsaDecrypter;
+
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.security.spec.InvalidKeySpecException;
+import java.util.Arrays;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 
 public class BraintreeTest extends AndroidTestCase {
     private String publicKey = "MIIBCgKCAQEA8wQ3PXFYuBn9RBtOK3lW4V+7HNjik7FFd0qpPsCVd4KeiIfhuzupSevHUOLjbRSqwvAaZK3/icbBaM7CM"
@@ -42,16 +45,12 @@ public class BraintreeTest extends AndroidTestCase {
     @Override
     public void setUp() {
         braintree = new Braintree(publicKey);
-        String formattedVersion = braintree.getVersion().replace(".", "_");
+        String formattedVersion = BuildConfig.VERSION_NAME.replace(".", "_");
         encryptedPrefix = "$bt3|android_" + formattedVersion + "$";
     }
 
     public void testHasAPublicKey() {
         assertEquals(publicKey, braintree.getPublicKey());
-    }
-
-    public void testApplicationVersion() {
-        assertTrue(!braintree.getVersion().equals(""));
     }
 
     public void testEncryptedDataPrependsWithPlatformAndVersion() throws BraintreeEncryptionException {
