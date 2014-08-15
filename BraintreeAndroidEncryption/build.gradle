@@ -11,14 +11,7 @@ android {
         minSdkVersion 7
         targetSdkVersion 20
         versionCode 1
-        versionName "1.0.0"
-    }
-
-    buildTypes {
-        release {
-            runProguard true
-            proguardFiles 'proguard-rules.cfg'
-        }
+        versionName '1.0.0'
     }
 }
 
