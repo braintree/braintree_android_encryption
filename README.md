@@ -1,7 +1,7 @@
 # Braintree Android Encryption
 
-This library is for use with [Braintree's payment gateway](http://braintreepayments.com/) in concert 
-with one of [the supported client libraries](http://braintreepayments.com/docs).  It encrypts 
+This library is for use with [Braintree's payment gateway](http://braintreepayments.com/) in concert
+with one of [the supported client libraries](http://braintreepayments.com/docs).  It encrypts
 sensitive payment information using the public key of an asymmetric key pair.
 
 ## Install
@@ -13,7 +13,7 @@ In your `build.gradle`, add the following:
 ```groovy
 dependencies {
   ...
-  compile 'com.braintreegateway:encryption:1.+'
+  compile 'com.braintreepayments:encryption:2.+'
 }
 ```
 
@@ -25,9 +25,9 @@ In your `pom.xml` add the following:
 <dependencies>
   ...
     <dependency>
-      <groupId>com.braintreegateway</groupId>
+      <groupId>com.braintreepayments</groupId>
       <artifactId>encryption</artifactId>
-      <version>[1.0,)</version>
+      <version>[2.0,)</version>
       <type>jar</type>
     </dependency>
   </dependencies>
@@ -35,7 +35,7 @@ In your `pom.xml` add the following:
 
 ### Jar File
 
-Download the [jar file](https://repository.sonatype.org/service/local/artifact/maven/redirect?r=central-proxy&g=com.braintreegateway&a=encryption&v=LATEST) 
+Download the [jar file](https://repository.sonatype.org/service/local/artifact/maven/redirect?r=central-proxy&g=com.braintreepayments&a=encryption&v=LATEST)
 and include it in your project.
 
 ## Usage
@@ -52,19 +52,19 @@ And call the `encrypt` method passing in the data you wish to be encrypted.
 String encryptedValue = braintree.encrypt("sensitiveValue");
 ```
 
-Because we are using asymmetric encryption, you will be unable to decrypt the data you have 
-encrypted using your public encryption key. Only the Braintree Gateway will be able to decrypt 
-these encrypted values.  This means that `encryptedValue` is now safe to pass through your servers 
+Because we are using asymmetric encryption, you will be unable to decrypt the data you have
+encrypted using your public encryption key. Only the Braintree Gateway will be able to decrypt
+these encrypted values.  This means that `encryptedValue` is now safe to pass through your servers
 to be used in the Server-to-Server API of one of our client libraries.
 
 ## Retrieving your Encryption Key
 
-When Client-Side encryption is enabled for your Braintree Gateway account, a key pair is generated 
+When Client-Side encryption is enabled for your Braintree Gateway account, a key pair is generated
 and you are given a specially formatted version of the public key.
 
 ## Encrypting Form Values
 
-The normal use case for this library is to encrypt a credit card number and CVV code before a form 
+The normal use case for this library is to encrypt a credit card number and CVV code before a form
 is submitted to your servers.  A simple example of this in Android might look something like this:
 
 ```java
@@ -96,6 +96,6 @@ public class BraintreeActivity extends Activity {
 ```
 
 ## License
-  
-braintree_android_encryption is open source and available under the MIT license. See the 
+
+braintree_android_encryption is open source and available under the MIT license. See the
 [LICENSE](LICENSE) file for more info.
