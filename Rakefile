@@ -28,7 +28,7 @@ task :release => :test do
   update_version(version)
 
   sh "./gradlew clean uploadArchives"
-  puts "BraintreeAndroidEncryption ${version} was uploaded, please promote it on oss.sonatype.org. Press ENTER when you have promoted it"
+  puts "BraintreeAndroidEncryption #{version} was uploaded, please promote it on oss.sonatype.org. Press ENTER when you have promoted it"
   $stdin.gets
 
   sh "git commit -am 'Release #{version}'"
