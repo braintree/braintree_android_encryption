@@ -39,8 +39,9 @@ task :release => :test do
 
   sh "git push origin master"
   sh "git push --tags"
-  sh "git push github master"
-  sh "git push github --tags"
+
+  puts "Tagging complete! Commits and tags are now in GHE."
+  puts "Squash (or don't!) and push to public Github at your leisure."
 end
 
 def build_gradle_file
