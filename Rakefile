@@ -6,7 +6,7 @@ desc "run unit tests"
 task :test do
   output = `adb devices`
   if output.match(/device$/)
-    sh "./gradlew --info clean connectedAndroidTest"
+    sh "./gradlew --info clean lint connectedAndroidTest"
   else
     puts "Please connect a device or start an emulator and try again"
     exit 1
