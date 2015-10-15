@@ -1,16 +1,17 @@
 package com.braintreegateway.encryption.util;
 
+import com.braintree.org.bouncycastle.util.encoders.Base64;
+
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
-import org.apache.http.util.ByteArrayBuffer;
-import com.braintree.org.bouncycastle.util.encoders.Base64;
 
 public final class AesDecrypter {
     private static int IV_LENGTH = 16;
@@ -43,22 +44,21 @@ public final class AesDecrypter {
     }
 
     private static byte[] getIV(byte[] data) {
-        ByteArrayBuffer buffer = new ByteArrayBuffer(IV_LENGTH);
+        byte[] buffer = new byte[IV_LENGTH];
         for (int i = 0; i < IV_LENGTH; i++) {
-            byte[] singleByte = { data[i] };
-            buffer.append(singleByte, 0, 1);
+            buffer[i] = data[i];
         }
-        return buffer.toByteArray();
+        return buffer;
     }
 
     private static byte[] getEncryptedData(byte[] data) {
-        int dataLength = data.length - IV_LENGTH;
-        ByteArrayBuffer buffer = new ByteArrayBuffer(dataLength);
+        byte[] buffer = new byte[data.length - IV_LENGTH];
+        int bufferIndex = 0;
         for (int i = IV_LENGTH; i < data.length; i++) {
-            byte[] singleByte = { data[i] };
-            buffer.append(singleByte, 0, 1);
+            buffer[bufferIndex] = data[i];
+            bufferIndex++;
         }
-        return buffer.toByteArray();
+        return buffer;
     }
 
     private static Cipher aesCipher() throws NoSuchAlgorithmException, NoSuchPaddingException {
