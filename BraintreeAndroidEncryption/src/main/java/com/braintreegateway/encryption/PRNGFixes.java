@@ -12,6 +12,7 @@ package com.braintreegateway.encryption;
 
 import android.os.Build;
 import android.os.Process;
+import android.util.Log;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
@@ -40,7 +41,7 @@ public final class PRNGFixes {
     private static final int VERSION_CODE_JELLY_BEAN = 16;
     private static final int VERSION_CODE_JELLY_BEAN_MR2 = 18;
     private static final byte[] BUILD_FINGERPRINT_AND_DEVICE_SERIAL =
-        getBuildFingerprintAndDeviceSerial();
+            getBuildFingerprintAndDeviceSerial();
 
     /** Hidden constructor to prevent instantiation. */
     private PRNGFixes() {}
@@ -110,7 +111,7 @@ public final class PRNGFixes {
         if ((secureRandomProviders == null)
                 || (secureRandomProviders.length < 1)
                 || (!LinuxPRNGSecureRandomProvider.class.equals(
-                        secureRandomProviders[0].getClass()))) {
+                secureRandomProviders[0].getClass()))) {
             Security.insertProviderAt(new LinuxPRNGSecureRandomProvider(), 1);
         }
 
@@ -135,7 +136,7 @@ public final class PRNGFixes {
                 rng2.getProvider().getClass())) {
             throw new SecurityException(
                     "SecureRandom.getInstance(\"SHA1PRNG\") backed by wrong"
-                    + " Provider: " + rng2.getProvider().getClass());
+                            + " Provider: " + rng2.getProvider().getClass());
         }
     }
 
@@ -149,7 +150,7 @@ public final class PRNGFixes {
             super("LinuxPRNG",
                     1.0,
                     "A Linux-specific random number provider that uses"
-                        + " /dev/urandom");
+                            + " /dev/urandom");
             // Although /dev/urandom is not a SHA-1 PRNG, some apps
             // explicitly request a SHA1PRNG SecureRandom and we thus need to
             // prevent them from getting the default implementation whose output
@@ -213,10 +214,13 @@ public final class PRNGFixes {
                 }
                 out.write(bytes);
                 out.flush();
-                mSeeded = true;
             } catch (IOException e) {
-                throw new SecurityException(
-                        "Failed to mix seed into " + URANDOM_FILE, e);
+                // On a small fraction of devices /dev/urandom is not writable.
+                // Log and ignore.
+                Log.w(PRNGFixes.class.getSimpleName(),
+                        "Failed to mix seed into " + URANDOM_FILE);
+            } finally {
+                mSeeded = true;
             }
         }
 
@@ -267,15 +271,10 @@ public final class PRNGFixes {
             }
         }
 
-        private OutputStream getUrandomOutputStream() {
+        private OutputStream getUrandomOutputStream() throws IOException {
             synchronized (sLock) {
                 if (sUrandomOut == null) {
-                    try {
-                        sUrandomOut = new FileOutputStream(URANDOM_FILE);
-                    } catch (IOException e) {
-                        throw new SecurityException("Failed to open "
-                                + URANDOM_FILE + " for writing", e);
-                    }
+                    sUrandomOut = new FileOutputStream(URANDOM_FILE);
                 }
                 return sUrandomOut;
             }
