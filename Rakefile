@@ -17,8 +17,6 @@ task :release => :test do
   last_version = `git tag | tail -1`.chomp
   puts "Changes since #{last_version}:"
   sh "git log --pretty=format:\"%h %ad%x20%s%x20%x28%an%x29\" --date=short #{last_version}.."
-  puts
-  puts "Please update your CHANGELOG.md. Press ENTER when you are done"
   $stdin.gets
 
   puts "What version are you releasing? (x.x.x format)"
@@ -41,7 +39,7 @@ task :release => :test do
   sh "git push --tags"
 
   puts "Tagging complete! Commits and tags are now in GHE."
-  puts "Squash (or don't!) and push to public Github at your leisure."
+  puts "Push to public Github and update releases with this release."
 end
 
 def build_gradle_file
